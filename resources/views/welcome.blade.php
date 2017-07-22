@@ -14,7 +14,7 @@
             <div class="col-lg-offset-3 col-lg-6">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <h3 class="panel-title">My Todays ToDo List  <a href="" class="pull-right" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus" aria-hidden="true"></i></a></h3>
+                    <h3 class="panel-title">My Todays ToDo List  <a href="" id="addNew" class="pull-right" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus" aria-hidden="true"></i></a></h3>
                   </div>
                   <div class="panel-body">
                     <ul class="list-group">
@@ -68,6 +68,14 @@
                 console.log(text);
               });
             });
+
+            $('#addNew').click(function(event) {
+                $("#title").text("Add New Item");
+                $("#addItem").val("Add Item Here...");
+                $("#delete").hide("400");
+                $("#saveChanges").hide("400");
+                $("#addButton").show("400");
+              });
           });
     </script>
 </body>
