@@ -50,7 +50,7 @@
     </div><!-- /.modal -->
 
 
-
+    {{csrf_field()}}
     
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
@@ -71,11 +71,18 @@
 
             $('#addNew').click(function(event) {
                 $("#title").text("Add New Item");
-                $("#addItem").val("Add Item Here...");
+                $("#addItem").val("");
                 $("#delete").hide("400");
                 $("#saveChanges").hide("400");
                 $("#addButton").show("400");
               });
+
+            $('#addButton').click(function(event) {
+             var text = $('#addItem').val();
+             $.post('/', {'text': text,'_token':$('input[name=_token]').val()}, function(data) {
+             console.log(data);
+             });
+             });
           });
     </script>
 </body>
