@@ -26,5 +26,24 @@ class ListController extends Controller
 
     	Item::where('id',$request->id)->delete();
     }
+
+    public function update(request $request){
+    	$item = Item::find($request->id);
+    	$item->item = $request->value;
+    	$item->save();
+    }
+
+    public function search(request $request){
+    	$term = $request->term;
+    	$items = Item::where('item','LIKE','%'.$term.'%')->get();
+    	if (count($items)==0) {
+    		$searchResult[] = 'No item found';
+    	}else{
+    		foreach ($items as $key => $value) {
+    			$searchResult[] = $value->item;
+    		}
+    	}
+    	return $searchResult;
+    }
     
 }

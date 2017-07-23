@@ -17,5 +17,7 @@ Route::get('/', function () {
 
 Route::get('/','ListController@index');
 Route::post('/','ListController@create');
-Route::post('/','ListController@delete');
+Route::post('delete','ListController@delete');
+Route::post('update','ListController@update');
+Route::get('search','ListController@search');
 

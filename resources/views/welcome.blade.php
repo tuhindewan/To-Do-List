@@ -5,6 +5,7 @@
     <title>AJAX To-Do List</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
 
 </head>
 <body>
@@ -27,8 +28,13 @@
                   </div>
                 </div>
             </div>
+            <div class="col-lg-2">
+              <input type="text" class="form-control" id="searchItem" name="item" placeholder="Search">
+            </div>
         </div>
     </div>
+
+    
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -43,7 +49,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-warning" id="delete" data-dismiss="modal" style="display: none">Delete</button>
-            <button type="button" class="btn btn-primary" id="saveChanges" style="display: none">Save changes</button>
+            <button type="button" class="btn btn-primary" id="saveChanges" style="display: none" data-dismiss="modal">Save changes</button>
             <button type="button" class="btn btn-primary" id="addButton" data-dismiss="modal" >Add Item</button>
           </div>
         </div><!-- /.modal-content -->
@@ -56,11 +62,13 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
       $(document).ready(function() {
             $(document).on('click','.ourItem',function(event) {
                 var text = $(this).text();
                 var id = $(this).find('#itemId').val();
+                var text = $.trim(text);
                 $("#addItem").val(text);
                 $("#title").text("Edit Item");
                 $("#delete").show("400");
@@ -80,19 +88,62 @@
 
             $('#addButton').click(function(event) {
              var text = $('#addItem').val();
+             if (text=="") {
+              alert("Please type anything for item");
+             }else{
              $.post('/', {'text': text,'_token':$('input[name=_token]').val()}, function(data) {
              console.log(data);
              $("#items").load(location.href + ' #items');
              });
+             }
              });
 
             $('#delete').click(function(event){
               var id = $('#id').val();
-              $.post('/',{'id':id,'_token':$('input[name=_token]').val()}, function(data){
+              $.post('delete',{'id':id,'_token':$('input[name=_token]').val()}, function(data){
               $("#items").load(location.href + ' #items');
               console.log(data);
               });
             });
+
+            $('#saveChanges').click(function(event){
+              var id = $('#id').val();
+              var value = $.trim($('#addItem').val());
+              $.post('update',{'id':id,'value':value,'_token':$('input[name=_token]').val()}, function(data){
+              $("#items").load(location.href + ' #items');
+              console.log(data);
+              });
+            });
+
+            $( function() {
+                var availableTags = [
+                  "ActionScript",
+                  "AppleScript",
+                  "Asp",
+                  "BASIC",
+                  "C",
+                  "C++",
+                  "Clojure",
+                  "COBOL",
+                  "ColdFusion",
+                  "Erlang",
+                  "Fortran",
+                  "Groovy",
+                  "Haskell",
+                  "Java",
+                  "JavaScript",
+                  "Lisp",
+                  "Perl",
+                  "PHP",
+                  "Python",
+                  "Ruby",
+                  "Scala",
+                  "Scheme"
+                ];
+                $( "#searchItem" ).autocomplete({
+                  source: "http://localhost:8000/search"
+                });
+              } );
 
           });
     </script>
